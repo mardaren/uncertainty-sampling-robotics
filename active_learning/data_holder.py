@@ -20,8 +20,14 @@ class DataHolder:
     def initial_step(self):
         self.known_idx, self.unknown_idx = self.data_selector.initial_query(self.x_train)
 
-    def step(self):
-        return None
+    def step(self, **kwargs):
+        rel_query_idx = self.data_selector.query(**kwargs)
+        query_idx = self.unknown_idx[rel_query_idx]
+
+        self.known_idx = np.append(self.known_idx, query_idx, axis=0)
+        self.unknown_idx = np.delete(self.unknown_idx, rel_query_idx, axis=0)
+
+        return query_idx
 
     def known_x(self):
         return self.x_train[self.known_idx]

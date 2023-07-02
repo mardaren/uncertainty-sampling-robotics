@@ -33,6 +33,7 @@ class GPRHandler(BaseModelHandler):
             self.data_y = np.append(self.data_y, sample_y, axis=0)
 
         self.estimator.fit(self.data_x, self.data_y)
+        print()
 
     def get_predictions(self, data_x):
-        return self.estimator.predict(data_x)
+        return self.estimator.predict(data_x, return_std=True)
