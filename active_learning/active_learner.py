@@ -1,5 +1,6 @@
 import timeit
 from sklearn.metrics import mean_absolute_error
+from matplotlib import pyplot as plt
 
 from data_loader import DataLoader
 from active_learning.data_holder import DataHolder
@@ -18,6 +19,7 @@ class ActiveLearner:
         self.time_start = timeit.default_timer()
         self.data_holder.initial_step()
         # init model with it
+        self.model_handler.teach(sample_x=self.data_holder.known_x(), sample_y=self.data_holder.known_y())
 
     def update(self):
         sample = self.data_holder.step()
@@ -33,9 +35,16 @@ class ActiveLearner:
             print(f"Total Samples: {self.data_holder.known_idx.shape[0]}")
             print(f"Unknown data MAE: {unknown_mae}")
             print(f"Time Elapsed: {time_elapsed}")
-            break
             if unknown_mae < 0.4:
+                y_pred_known = self.ask_model(self.data_holder.known_x())
+                y_pred_test = self.ask_model(self.data_holder.x_test)
+                known_mae = self.measure(self.data_holder.known_y(), y_pred_known)
+                test_mae = self.measure(self.data_holder.y_test, y_pred_test)
+                print(f"Known data MAE: {known_mae}")
+                print(f"Test data MAE: {test_mae}")
+                self.plot_result(y_pred_test=y_pred_test, y_pred_unknown=y_pred_unknown)
                 break
+            break
             self.update()
             break
 
@@ -44,3 +53,13 @@ class ActiveLearner:
 
     def measure(self, y_true, y_pred):
         return mean_absolute_error(y_true=y_true, y_pred=y_pred)
+
+    def plot_result(self, y_pred_test, y_pred_unknown):
+        plt.title('Test Data')
+        plt.plot(self.data_holder.x_test[:, 0], self.data_holder.y_test, '.')
+        plt.plot(self.data_holder.x_test[:, 0], y_pred_test, '.')
+        plt.show()
+        plt.title('Unknown Data')
+        plt.plot(self.data_holder.unknown_x()[0], self.data_holder.unknown_y(), '.')
+        plt.plot(self.data_holder.unknown_x()[0], y_pred_unknown, '.')
+        plt.show()

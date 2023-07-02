@@ -35,4 +35,4 @@ class GPRHandler(BaseModelHandler):
         self.estimator.fit(self.data_x, self.data_y)
 
     def get_predictions(self, data_x):
-        return self.estimator.predict(self.data_x)
+        return self.estimator.predict(data_x)
