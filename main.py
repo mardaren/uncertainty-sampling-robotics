@@ -1,7 +1,7 @@
 import numpy as np
 import timeit
 from data_loader import DataLoader
-from active_learning import AL_GPR
+from active_learning import ActiveLearner
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, RationalQuadratic, DotProduct
@@ -25,8 +25,9 @@ if __name__ == '__main__':
     # print(f"time elapsed: {time_elapsed}")
     # exit(1)
 
-    learner = AL_GPR(x_train=data_loader.x_train, y_train=data_loader.y_train, x_test=data_loader.x_test,
-                     y_test=data_loader.y_test)
+    # learner = AL_GPR(x_train=data_loader.x_train, y_train=data_loader.y_train, x_test=data_loader.x_test,
+    #                  y_test=data_loader.y_test)
+    learner = ActiveLearner(data_loader=data_loader)
     learner.run()
 
 
