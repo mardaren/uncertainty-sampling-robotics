@@ -80,11 +80,15 @@ class VarianceClosenessBased(DataSelector):
 
         return cl
 
-    def get_std(self, std_values):
-        # normalize std
-        std_max = np.max(std_values)
-        std_min = np.min(std_values)
-        std_values = (std_values - std_min) / (std_max - std_min)
+    def get_std(self, std_values, normalize=True):
+        if std_values.ndim == 2:
+            std_values = np.sum(std_values, axis=1)
+
+        if normalize:
+            # normalize std
+            std_max = np.max(std_values)
+            std_min = np.min(std_values)
+            std_values = (std_values - std_min) / (std_max - std_min)
 
         return std_values
 

@@ -18,7 +18,7 @@ class BaseModelHandler:
 class GPRHandler(BaseModelHandler):
 
     def __init__(self):
-        kernel = Matern(length_scale=1e-2)
+        kernel = Matern(length_scale=1e-3)
         regressor = GaussianProcessRegressor(kernel=kernel)
         super().__init__(estimator=regressor)
         self.data_x = None

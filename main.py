@@ -1,7 +1,7 @@
 import numpy as np
 import timeit
 from data_loader import DataLoader
-from active_learning import ActiveLearner
+from active_learning import ActiveLearner, AL_Incremental
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, RationalQuadratic, DotProduct
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     data_loader = DataLoader(task_num=1)
 
     # time_start = timeit.default_timer()
-    # kernel = Matern(length_scale=1e-2)
+    # kernel = Matern(length_scale=1e-3)
     # regressor = GaussianProcessRegressor(kernel=kernel)
     # regressor.fit(X=data_loader.x_train, y=data_loader.y_train)
     #
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     # learner = AL_GPR(x_train=data_loader.x_train, y_train=data_loader.y_train, x_test=data_loader.x_test,
     #                  y_test=data_loader.y_test)
-    learner = ActiveLearner(data_loader=data_loader)
+    learner = AL_Incremental(data_loader=data_loader)
     learner.run()
 
 

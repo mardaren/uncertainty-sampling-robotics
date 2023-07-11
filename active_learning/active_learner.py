@@ -38,7 +38,7 @@ class ActiveLearner:
             print(f"Total Samples: {self.data_holder.known_idx.shape[0]}")
             print(f"Unknown data MAE: {unknown_mae}")
             print(f"Time Elapsed: {time_elapsed}")
-            if unknown_mae < 0.033:
+            if unknown_mae < 0.2:
                 y_pred_known = self.ask_model(self.data_holder.known_x())[0]
                 y_pred_test = self.ask_model(self.data_holder.x_test)[0]
                 known_mae = self.measure(self.data_holder.known_y(), y_pred_known)
@@ -48,7 +48,6 @@ class ActiveLearner:
                 self.plot_result(y_pred_test=y_pred_test, y_pred_unknown=y_pred_unknown[0])
                 break
             self.update(std_values=y_pred_unknown[1])
-            # break
 
     def ask_model(self, data_x):
         return self.model_handler.get_predictions(data_x=data_x)
@@ -58,10 +57,10 @@ class ActiveLearner:
 
     def plot_result(self, y_pred_test, y_pred_unknown):
         plt.title('Test Data')
-        plt.plot(self.data_holder.x_test[:, 0], self.data_holder.y_test, '.')
-        plt.plot(self.data_holder.x_test[:, 0], y_pred_test, '.')
+        plt.plot(self.data_holder.x_test[:, 0], self.data_holder.y_test[:, 0], '.')
+        plt.plot(self.data_holder.x_test[:, 0], y_pred_test[:, 0], '.')
         plt.show()
         plt.title('Unknown Data')
-        plt.plot(self.data_holder.unknown_x()[:, 0], self.data_holder.unknown_y(), '.')
-        plt.plot(self.data_holder.unknown_x()[:, 0], y_pred_unknown, '.')
+        plt.plot(self.data_holder.unknown_x()[:, 0], self.data_holder.unknown_y()[:, 0], '.')
+        plt.plot(self.data_holder.unknown_x()[:, 0], y_pred_unknown[:, 0], '.')
         plt.show()

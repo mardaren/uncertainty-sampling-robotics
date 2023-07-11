@@ -32,7 +32,7 @@ class DataLoader:
         return actions, effects
 
     def get_train_test(self, data_x, data_y):  # random olmasını istiyorsak, degistirebiliriz de
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(data_x, data_y, test_size=0.33,
+        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(data_x, data_y, test_size=0.95,
                                                                                 random_state=self.random_state)
 
     # def scale_data(self, data_x):
@@ -41,7 +41,10 @@ class DataLoader:
 
 
     def change_y(self, data_y):
-        alpha = np.arctan2(data_y[:, 0], data_y[:, 1])
-        sin = np.sin(alpha)
-        data_y = alpha * sin
-        return alpha # **** normalization
+        x_diff = data_y[:, 0] - 0.6
+        y_diff = data_y[:, 1]
+        theta = np.arctan2(x_diff, y_diff)
+        dist = x_diff / np.sin(theta)  # dist = np.sqrt(x_diff **2 + y_diff **2)
+
+        data_y = np.append(theta.reshape(-1, 1), dist.reshape(-1, 1), axis=1)
+        return data_y
