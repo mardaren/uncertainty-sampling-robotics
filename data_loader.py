@@ -32,7 +32,7 @@ class DataLoader:
         return actions, effects
 
     def get_train_test(self, data_x, data_y):  # random olmasını istiyorsak, degistirebiliriz de
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(data_x, data_y, test_size=0.95,
+        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(data_x, data_y, test_size=0.33,
                                                                                 random_state=self.random_state)
 
     # def scale_data(self, data_x):

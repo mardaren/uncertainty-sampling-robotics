@@ -1,14 +1,17 @@
 import numpy as np
 import timeit
 from data_loader import DataLoader
-from active_learning import ActiveLearner, AL_Incremental
+from active_learning import ActiveLearner, AL_Incremental, AL_Robotic
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, RationalQuadratic, DotProduct
 from sklearn.metrics import mean_absolute_error
 
+from pb.task import Task
+
 if __name__ == '__main__':
     data_loader = DataLoader(task_num=1)
+    task = Task()
 
     # time_start = timeit.default_timer()
     # kernel = Matern(length_scale=1e-3)
@@ -25,9 +28,9 @@ if __name__ == '__main__':
     # print(f"time elapsed: {time_elapsed}")
     # exit(1)
 
-    # learner = AL_GPR(x_train=data_loader.x_train, y_train=data_loader.y_train, x_test=data_loader.x_test,
-    #                  y_test=data_loader.y_test)
-    learner = AL_Incremental(data_loader=data_loader)
+    learner = ActiveLearner(data_loader=data_loader)
+    # learner = AL_Incremental(data_loader=data_loader)
+    # learner = AL_Robotic(task=task)
     learner.run()
 
 
