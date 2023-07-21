@@ -1,4 +1,5 @@
 import timeit
+import numpy as np
 from sklearn.metrics import mean_absolute_error
 from matplotlib import pyplot as plt
 
@@ -45,7 +46,7 @@ class ActiveLearner:
                 test_mae = self.measure(self.data_holder.y_test, y_pred_test)
                 print(f"Known data MAE: {known_mae}")
                 print(f"Test data MAE: {test_mae}")
-                self.plot_result2(y_pred_test=y_pred_test, y_pred_unknown=y_pred_unknown[0])
+                self.plot_result_x_y(y_pred_test=y_pred_test, y_pred_unknown=y_pred_unknown[0])
                 break
             self.update(std_values=y_pred_unknown[1])
 
@@ -74,3 +75,24 @@ class ActiveLearner:
         plt.plot(self.data_holder.unknown_y()[:, 0], self.data_holder.unknown_y()[:, 1], '.')
         plt.plot(y_pred_unknown[:, 0], y_pred_unknown[:, 1], '.')
         plt.show()
+
+    def plot_result_x_y(self, y_pred_test, y_pred_unknown):
+        plt.title('Test Data')
+        y_test_x, y_test_y = self.change_to_x_y(self.data_holder.y_test)
+        plt.plot(y_test_x, y_test_y, '.')
+        y_pred_test_x, y_pred_test_y = self.change_to_x_y(y_pred_test)
+        plt.plot(y_pred_test_x, y_pred_test_y, '.')
+        plt.show()
+        plt.title('Unknown Data')
+        unknown_y_x, unknown_y_y = self.change_to_x_y(self.data_holder.unknown_y())
+        plt.plot(unknown_y_x, unknown_y_y, '.')
+        y_pred_unknown_x, y_pred_unknown_y = self.change_to_x_y(y_pred_unknown)
+        plt.plot(y_pred_unknown_x, y_pred_unknown_y, '.')
+        plt.show()
+
+    def change_to_x_y(self, output):
+        thetas = output[:, 0]
+        distances = output[:, 1]
+        x = np.sin(thetas) * distances
+        y = np.cos(thetas) * distances
+        return x, y

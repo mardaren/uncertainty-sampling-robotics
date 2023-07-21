@@ -1,36 +1,28 @@
-import numpy as np
-import timeit
 from data_loader import DataLoader
-from active_learning import ActiveLearner, AL_Incremental, AL_Robotic
-
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import Matern, RationalQuadratic, DotProduct
-from sklearn.metrics import mean_absolute_error
-
 from pb.task import Task
 
+from active_learning import ActiveLearner, AL_Incremental, AL_Robotic
+from test import gpr_test
+
+
+def run_al(run_type):
+    types = ["static", "incremental", "robot"]
+
+    active_learner = None
+    if run_type == "robot":
+        task = Task()
+        active_learner = AL_Robotic(task=task)
+    elif run_type == "static":
+        data_loader = DataLoader(task_num=1, test_size=0.33)
+        active_learner = ActiveLearner(data_loader=data_loader)
+    elif run_type == "incremental":
+        data_loader = DataLoader(task_num=1, test_size=0.95)
+        active_learner = AL_Incremental(data_loader=data_loader)
+    active_learner.run()
+
+
 if __name__ == '__main__':
-    data_loader = DataLoader(task_num=1)
-    task = Task()
 
-    # time_start = timeit.default_timer()
-    # kernel = Matern(length_scale=1e-3)
-    # regressor = GaussianProcessRegressor(kernel=kernel)
-    # regressor.fit(X=data_loader.x_train, y=data_loader.y_train)
-    #
-    # y_pred = regressor.predict(X=data_loader.x_test)  #, return_std=True)
-    #
-    # test_mae = mean_absolute_error(y_true=data_loader.y_test, y_pred=y_pred)
-    #
-    # time_elapsed = timeit.default_timer() - time_start
-    #
-    # print(f"mae score: {test_mae}")
-    # print(f"time elapsed: {time_elapsed}")
-    # exit(1)
+    # gpr_test()
 
-    learner = ActiveLearner(data_loader=data_loader)
-    # learner = AL_Incremental(data_loader=data_loader)
-    # learner = AL_Robotic(task=task)
-    learner.run()
-
-
+    run_al("robot")
